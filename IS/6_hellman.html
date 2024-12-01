@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diffie-Hellman Key Exchange</title>
+</head>
+<body>
+<h2>Diffie-Hellman Key Exchange</h2>
+<div>
+  <label for="p">Prime Number (p):</label>
+  <input type="text" id="p" value="23"><br><br>
+  <label for="q">Primitive Root (q):</label>
+  <input type="text" id="q" value="5"><br><br>
+  <button onclick="generateKeys()">Generate Keys</button>
+</div>
+<div id="alice">
+  <h3>Alice</h3>
+  <label for="alice-private">Private Key (a):</label>
+  <input type="text" id="alice-private" readonly><br><br>
+  <label for="alice-public">Public Key (A):</label>
+  <input type="text" id="alice-public" readonly><br><br>
+</div>
+<div id="bob">
+  <h3>Bob</h3>
+  <label for="bob-private">Private Key (b):</label>
+  <input type="text" id="bob-private" readonly><br><br>
+  <label for="bob-public">Public Key (B):</label>
+  <input type="text" id="bob-public" readonly><br><br>
+</div>
+<script>
+function generateKeys() {
+  // Get p and g values
+  var p = parseInt(document.getElementById("p").value);
+  var q = parseInt(document.getElementById("q").value);
+  
+  // Generate random private keys for Alice and Bob
+  var a = Math.floor(Math.random() * (p - 1)) + 1; // Random integer between 1 and p-1
+  var b = Math.floor(Math.random() * (p - 1)) + 1;
+  
+  // Calculate public keys for Alice and Bob
+  var A = modPow(q, a, p); // A = (g^a) mod p
+  var B = modPow(q, b, p); // B = (g^b) mod p
+  
+  // Update input fields with generated keys
+  document.getElementById("alice-private").value = a;
+  document.getElementById("alice-public").value = A;
+  document.getElementById("bob-private").value = b;
+  document.getElementById("bob-public").value = B;
+}
+
+function modPow(base, exponent, modulus) {
+  if (modulus === 1) return 0;
+  
+  var result = 1;
+  base = base % modulus;
+  while (exponent > 0) {
+    if (exponent % 2 === 1) {
+      result = (result * base) % modulus;
+    }
+    exponent = exponent >> 1;
+    base = (base * base) % modulus;
+  }
+  return result;
+}
+</script>
+</body>
+</html>
